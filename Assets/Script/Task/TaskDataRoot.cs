@@ -21,7 +21,6 @@ public class TaskDataRoot
         Init();
 
     }
-
     public void Init()
     {
         taskDataDic = taskConfigRoot.GetTaskDataDic();
@@ -29,33 +28,31 @@ public class TaskDataRoot
 
         foreach (var taskData in taskDataDic)
         {
-            taskData.Value.OnTaskFinish += TaskFinish;
-            taskData.Value.CheckTaskStatus();
+            taskData.Value.OnTaskStatusChange += TaskStatusChange;
+            taskData.Value.CheckTaskStatus(ref finishTask);
+
+            UIMgr._instance.CreateTaskUI(taskData.Value);
         }
 
         foreach (var taskStageData in taskStageDataDic)
         {
             OnfinishTask += taskStageData.Value.CheckStage;
-            taskStageData.Value.OnTaskStageFinish += TaskStageFinish;
+            taskStageData.Value.OnTaskStageChange += TaskStageChange;
+
+            UIMgr._instance.CreateTaskStageUI(taskStageData.Value);
         }
 
+        OnfinishTask.Invoke(finishTask);
     }
 
-    public void AddTaskProcess(int task_id,int processTime, Action<int,DataStatus> callBack) //CallBack函数返回Task目前进度，以及是否完成控制领取奖励按钮
+    public void AddTaskProcess(int task_id, int processTime, Action<int> callback) //CallBack函数返回Task目前进度，以及是否完成控制领取奖励按钮
     {
         if(taskDataDic.ContainsKey(task_id)&& !taskDataDic[task_id].IsFinished())
         {
-            taskDataDic[task_id].AddProcess(processTime, callBack);
+            taskDataDic[task_id].AddProcess(processTime,callback);
         }
     }  
-    //领取按钮获取奖励
-    public void GetTaskReward(int task_id)
-    {
-        if(taskDataDic.ContainsKey(task_id))
-        {
-            taskDataDic[task_id].GetReward();
-        }
-    }
+
     public void GetTaskStageReward(int taskStage_id)
     {
         if (taskStageDataDic.ContainsKey(taskStage_id))
@@ -63,21 +60,31 @@ public class TaskDataRoot
             taskStageDataDic[taskStage_id].GetReward();
         }
     }
-    //只有当完成任务时才能触发，避免重新上线后可以重复领取阶段性奖励
-    private void TaskFinish(TaskData task)
+
+    public void TaskStatusChange(TaskData task)
     {
-        finishTask++;
-        OnfinishTask?.Invoke(finishTask);
-        //移除已经完成的任务
-        task.OnTaskFinish -= TaskFinish;
-        //任务完成过后保存一下
+        if(task.taskStatus==DataStatus.Finished)
+        {
+            finishTask++;
+            OnfinishTask?.Invoke(finishTask);
+        }
+        else if(task.taskStatus == DataStatus.Get)
+        {
+            task.OnTaskStatusChange -= TaskStatusChange;
+        }
         SaveTaskData();
     }
 
-    private void TaskStageFinish(TaskStageData taskStageData)
+    private void TaskStageChange(TaskStageData taskStageData)
     {
-        OnfinishTask -= taskStageData.CheckStage;
-        taskStageData.OnTaskStageFinish -= TaskStageFinish;
+        if(taskStageData.taskStageStatus==DataStatus.Finished)
+        {
+            OnfinishTask -= taskStageData.CheckStage;
+        }
+        else if(taskStageData.taskStageStatus == DataStatus.Get)
+        {
+            taskStageData.OnTaskStageChange -= TaskStageChange;
+        }
         SaveTaskStageData();
     }
     //状态重置
@@ -87,15 +94,15 @@ public class TaskDataRoot
         foreach (var taskData in taskDataDic)
         {
             taskData.Value.ResetTaskData();
-            taskData.Value.OnTaskFinish -= TaskFinish;
-            taskData.Value.OnTaskFinish += TaskFinish;
+            taskData.Value.OnTaskStatusChange -= TaskStatusChange;
+            taskData.Value.OnTaskStatusChange += TaskStatusChange;
         }
         foreach (var taskStageData in taskStageDataDic)
         {
             taskStageData.Value.ResetTaskData();
 
-            taskStageData.Value.OnTaskStageFinish -= TaskStageFinish;
-            taskStageData.Value.OnTaskStageFinish += TaskStageFinish;
+            taskStageData.Value.OnTaskStageChange -= TaskStageChange;
+            taskStageData.Value.OnTaskStageChange += TaskStageChange;
 
             OnfinishTask -= taskStageData.Value.CheckStage;
             OnfinishTask += taskStageData.Value.CheckStage;

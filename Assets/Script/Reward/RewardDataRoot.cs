@@ -49,7 +49,7 @@ public class RewardDataRoot
             if (rewardStageData.Value.rewardStageStatus == 0)
             {
                 onDraw += rewardStageData.Value.CheckStage;
-                rewardStageData.Value.onStageFinish += OnRewardStageFinish; 
+                rewardStageData.Value.onStageStatusChange += OnRewardStageStatusChange; 
             }
         }
         onDraw?.Invoke(m_DrawData.drawTimeMonth);
@@ -77,7 +77,6 @@ public class RewardDataRoot
         {
             randomGet.Draw();
             onDraw?.Invoke(m_DrawData.drawTimeMonth);//检查阶段奖励
-
 
             SaveDrawData();
             SaveRewardData();
@@ -128,11 +127,19 @@ public class RewardDataRoot
         return rewardNotGetList[index];  
     }
 
-    public void OnRewardStageFinish(RewardStageData rewaredStage)
+    public void OnRewardStageStatusChange(RewardStageData rewaredStage)
     {
+        if(rewaredStage.rewardStageStatus ==DataStatus.Finished)
+        {
+            onDraw -= rewaredStage.CheckStage;
+        }
+        else if(rewaredStage.rewardStageStatus == DataStatus.Get)
+        {
+            rewaredStage.onStageStatusChange -= OnRewardStageStatusChange;
+        }
         //领取奖励
-        rewaredStage.onStageFinish -= OnRewardStageFinish;
-        onDraw -= rewaredStage.CheckStage;
+
+        SaveRewardStageData();
     }
 
     //广告增加抽奖次数
@@ -166,10 +173,10 @@ public class RewardDataRoot
         {
             rewardStageData.Value.Reset();
 
-            rewardStageData.Value.onStageFinish -= OnRewardStageFinish;
+            rewardStageData.Value.onStageStatusChange -= OnRewardStageStatusChange;
             onDraw -= rewardStageData.Value.CheckStage;
 
-            rewardStageData.Value.onStageFinish += OnRewardStageFinish;
+            rewardStageData.Value.onStageStatusChange += OnRewardStageStatusChange;
             onDraw += rewardStageData.Value.CheckStage;
         }
     }

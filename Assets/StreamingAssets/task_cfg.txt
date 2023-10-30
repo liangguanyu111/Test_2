@@ -16,5 +16,14 @@
 	"target_amount": 50,
 	"reward_itemId":1,
 	"reward_amount": 50
+},
+{
+	"task_id": 3,
+	"icon": "Gold",
+	"desc": "签到",
+	"task_target": "signIn",
+	"target_amount": 1,
+	"reward_itemId":1,
+	"reward_amount": 50
 }
 ]

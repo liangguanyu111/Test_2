@@ -26,6 +26,7 @@ public class JsaonMgr
                     cfgList.Add(cfgItem);
                 }
             }
+            streamReader.Close();
             js.Close();
             cfgItemList = cfgList;
             return true;
@@ -43,6 +44,7 @@ public class JsaonMgr
             file.CreateText().Dispose();
         }
         StreamWriter sw = new StreamWriter(filePath);
+
         string json = JsonMapper.ToJson(configList);
         sw.WriteLine(json);
         sw.Close();

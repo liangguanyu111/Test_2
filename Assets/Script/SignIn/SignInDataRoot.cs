@@ -37,7 +37,7 @@ public class SignInDataRoot
         foreach (var signInData in signInDataDic)
         {
             CheckSignStatus += signInData.Value.CheckSignStatus;
-            signInData.Value.OnSignIn += OnSignIn;
+            signInData.Value.OnSignStatusChange += OnSignStatusChange;
         }
 
         List<SignData> signData = new List<SignData>();
@@ -64,12 +64,17 @@ public class SignInDataRoot
 
     }
 
-    public void OnSignIn(SignInData signData)
+    public void OnSignStatusChange(SignInData signData)
     {
+        if(signData.signStatus == SignDataStatus.CanResign|| signData.signStatus == SignDataStatus.CanSign)
+        {
+            CheckSignStatus -= signData.CheckSignStatus;
+        }
+        else if(signData.signStatus == SignDataStatus.Signed)
+        {
+            signData.OnSignStatusChange -= OnSignStatusChange;
+        }
         //UI逻辑修改
-        signData.OnSignIn -= OnSignIn;
-        CheckSignStatus -= signData.CheckSignStatus;
-
         SaveSignInData();
     }
     private void onDayRefersh()
@@ -87,10 +92,10 @@ public class SignInDataRoot
 
             //重新添加时，部分没有移除需要先移除
             CheckSignStatus -= signInData.Value.CheckSignStatus;
-            signInData.Value.OnSignIn -= OnSignIn;
+            signInData.Value.OnSignStatusChange -= OnSignStatusChange;
 
             CheckSignStatus += signInData.Value.CheckSignStatus;
-            signInData.Value.OnSignIn += OnSignIn;
+            signInData.Value.OnSignStatusChange += OnSignStatusChange;
         }
         //每月刷新之后需要重新监听
 

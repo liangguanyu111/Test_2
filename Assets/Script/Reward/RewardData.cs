@@ -7,22 +7,27 @@ public class RewardData
     private RewardConfig rewardCfg;
     public RewardConfig RewardCfg { get => rewardCfg; set => rewardCfg = value; }
 
-    public DataStatus rewardStatus; //0±íÊ¾»¹Ã»ÓĞ±»³éÈ¡,1±íÊ¾±»³éÈ¡ÁË
+    public DataStatus rewardStatus; //0è¡¨ç¤ºè¿˜æ²¡æœ‰è¢«æŠ½å–,1è¡¨ç¤ºè¢«æŠ½å–äº†
+
+    public event Action<RewardData> onStatusChange;
     public RewardData() { }
     public RewardData(RewardConfig rewardCfg)
     {
         this.rewardCfg = rewardCfg;
         rewardStatus = DataStatus.NotFinish;
+        onStatusChange.Invoke(this);
     }
 
     public void Reset()
     {
         rewardStatus = DataStatus.NotFinish;
+        onStatusChange.Invoke(this);
     }
     public void Draw()
     {
-        //³é½±µÄ½±ÀøÊÇÁ¢¼´·¢·ÅµÄ ²»´æÔÚÃ»ÓĞÁìÈ¡
+        //æŠ½å¥–çš„å¥–åŠ±æ˜¯ç«‹å³å‘æ”¾çš„ ä¸å­˜åœ¨æ²¡æœ‰é¢†å–
         rewardStatus = DataStatus.Get;
+        onStatusChange.Invoke(this);
     }
 
 }

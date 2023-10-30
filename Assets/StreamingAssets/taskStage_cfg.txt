@@ -1,19 +1,19 @@
 [
 {
 	"task_stageID": 1,
-	"task_stageNum": 3,
+	"task_stageNum": 1,
 	"reward_itemId":1,
 	"reward_amount": 50
 },
 {
 	"task_stageID": 2,
-	"task_stageNum": 6,
+	"task_stageNum": 2,
 	"reward_itemId":1,
 	"reward_amount": 50
 },
 {
 	"task_stageID": 3,
-	"task_stageNum": 9,
+	"task_stageNum": 3,
 	"reward_itemId":1,
 	"reward_amount": 50
 }

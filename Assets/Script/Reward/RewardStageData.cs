@@ -9,7 +9,7 @@ public class RewardStageData
     public DataStatus rewardStageStatus; //0代表未完成,1代表已经完成未领取，2代表已经领取
     public RewardStageConfig rewardStageCfg;
 
-    public event Action<RewardStageData> onStageFinish;
+    public event Action<RewardStageData> onStageStatusChange;
     public RewardStageData() { }
    public RewardStageData(RewardStageConfig rewardStageConfig)
    {
@@ -23,16 +23,18 @@ public class RewardStageData
         if(drawTimeMonth > rewardStageCfg.reward_stageNum)
         {
             rewardStageStatus = DataStatus.Finished;
-            onStageFinish.Invoke(this);
+            onStageStatusChange.Invoke(this);
         }
     }
     public void Reset()
     {
         rewardStageStatus = DataStatus.NotFinish;
+        onStageStatusChange.Invoke(this);
     }
 
     public void GetReward()
     {
         rewardStageStatus = DataStatus.Get;
+        onStageStatusChange.Invoke(this);
     }
 }

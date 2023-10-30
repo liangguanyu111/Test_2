@@ -17,7 +17,7 @@ public class SignInData
 
     public SignDataStatus signStatus; // 0表示未签到，1表示可以补签，2表示已经签到
 
-    public event Action<SignInData> OnSignIn;
+    public event Action<SignInData> OnSignStatusChange;
 
 
     public SignInData() { }
@@ -39,19 +39,21 @@ public class SignInData
             {
                 signStatus = SignDataStatus.CanResign;
             }
+            OnSignStatusChange.Invoke(this);
         }
     }
 
     public void Reset()
     {
         signStatus = SignDataStatus.NotSign;
+        OnSignStatusChange.Invoke(this);
     }
     //签到
 
     public void Sign(Action<SignDataStatus> callback)
     {
         signStatus = SignDataStatus.Signed;
-        OnSignIn.Invoke(this);
+        OnSignStatusChange.Invoke(this);
         callback(signStatus);     
     }
 }

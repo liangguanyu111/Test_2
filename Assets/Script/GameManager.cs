@@ -35,11 +35,10 @@ public class GameManager : MonoBehaviour
         saveMgr.OnSave += rewardDataRoot.Save;
         saveMgr.OnSave += signInDataRoot.Save;
         saveMgr.OnSave += TimeMgr._instance.Save;
-        
+
         //向ID为2的任务添加1进度
-        taskDataRoot.AddTaskProcess(2, 1, (int a, DataStatus b) => { });
         //随机抽一个奖励
-        rewardDataRoot.Draw((int availabledrawTime,int drawTime,bool buttonStatus) => { });
+        //rewardDataRoot.Draw((int availabledrawTime,int drawTime,bool buttonStatus) => { });
     }
     //退出时也保存一下
     private void OnApplicationQuit()

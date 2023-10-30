@@ -12,7 +12,7 @@ public class TaskData
     [JsonIgnore]
     public TaskConfig TaskCfg { get => taskCfg; set => taskCfg = value; }
 
-    public event Action<TaskData> OnTaskFinish;
+    public event Action<TaskData> OnTaskStatusChange;
 
     public int task_process; //任务进度
     public DataStatus taskStatus; // 奖励是否被领取,0为没有领取，1为任务完成，2为奖励领取
@@ -32,17 +32,18 @@ public class TaskData
     public void ResetTaskData()
     {
         task_process = 0;
-        taskStatus = 0;
+        taskStatus = DataStatus.NotFinish;
+        OnTaskStatusChange?.Invoke(this);
     }
-    public void CheckTaskStatus()
+    public void CheckTaskStatus(ref int finishTask)
     {
-        if(IsFinished())
+       if(taskStatus!=DataStatus.NotFinish)
         {
-            OnTaskFinish?.Invoke(this);
+            finishTask++;
         }
     }
 
-    public void AddProcess(int processTimes, Action<int, DataStatus> callBack)
+    public void AddProcess(int processTimes,Action<int> callback)
     {
         if(taskStatus!=DataStatus.NotFinish)
         {
@@ -52,15 +53,16 @@ public class TaskData
         if (task_process >= taskCfg.target_amount)
         {
             taskStatus = DataStatus.Finished;
-            OnTaskFinish.Invoke(this);
+            OnTaskStatusChange?.Invoke(this);
             Debug.Log("任务id" + taskCfg.task_id + "完成");
         }
-        callBack(task_process, taskStatus);
+        callback(task_process);
     }
     
     public void GetReward()
     {
         Debug.Log("获取任务奖励");
-        taskStatus =  DataStatus.Get;
+        taskStatus = DataStatus.Get;
+        OnTaskStatusChange?.Invoke(this);
     }
 }
