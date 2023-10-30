@@ -1,0 +1,23 @@
+[
+{
+	"signDay": 1,
+	"reward_itemId":1,
+	"reward_amount": 50
+},
+{
+	"signDay": 2,
+	"reward_itemId":1,
+	"reward_amount": 200
+},
+
+{
+	"signDay": 3,
+	"reward_itemId":10,
+	"reward_amount": 1
+},
+{
+	"signDay": 4,
+	"reward_itemId":10,
+	"reward_amount": 2
+}
+]

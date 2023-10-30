@@ -1,0 +1,1 @@
+[{"rewardStageStatus":0,"rewardStageCfg":{"reward_stageID":1,"reward_stageNum":10,"reward_itemId":1,"reward_amount":50}},{"rewardStageStatus":0,"rewardStageCfg":{"reward_stageID":2,"reward_stageNum":30,"reward_itemId":1,"reward_amount":200}},{"rewardStageStatus":0,"rewardStageCfg":{"reward_stageID":3,"reward_stageNum":100,"reward_itemId":4,"reward_amount":1}}]

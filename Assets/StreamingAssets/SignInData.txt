@@ -1,0 +1,1 @@
+[{"signInCfg":{"signDay":1,"reward_itemId":1,"reward_amount":50},"signStatus":0},{"signInCfg":{"signDay":2,"reward_itemId":1,"reward_amount":200},"signStatus":0},{"signInCfg":{"signDay":3,"reward_itemId":10,"reward_amount":1},"signStatus":0},{"signInCfg":{"signDay":4,"reward_itemId":10,"reward_amount":2},"signStatus":0}]
