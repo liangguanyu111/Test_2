@@ -1,6 +1,7 @@
 # Test_2
 第二次笔试
 
+![image](https://github.com/liangguanyu111/Test_2/blob/master/ff5f4c9e54539a4c084ab5c70cdeca0.png)
 第二次修改:
 1.简单的任务系统UI演示，UI显示通过回调和OnStatusChange配合
 2.将Data类中的event全部修改为OnStatusChange，当数据状态发生变化就Invoke，DataRoot类根据具体的状态判断逻辑。
