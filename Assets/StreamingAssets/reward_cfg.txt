@@ -9,10 +9,45 @@
 	"reward_itemId":1,
 	"reward_amount": 200
 },
-
 {
 	"reward_id": 3,
 	"reward_itemId":10,
 	"reward_amount": 1
+},
+{
+	"reward_id": 4,
+	"reward_itemId":10,
+	"reward_amount": 1
+},
+{
+	"reward_id": 5,
+	"reward_itemId":10,
+	"reward_amount": 1
+},
+{
+	"reward_id": 6,
+	"reward_itemId":10,
+	"reward_amount": 1
+},
+{
+	"reward_id": 7,
+	"reward_itemId":10,
+	"reward_amount": 1
+},
+{
+	"reward_id": 8,
+	"reward_itemId":10,
+	"reward_amount": 1
+},
+{
+	"reward_id": 9,
+	"reward_itemId":10,
+	"reward_amount": 1
+},
+{
+	"reward_id": 10,
+	"reward_itemId":10,
+	"reward_amount": 1
 }
+
 ]

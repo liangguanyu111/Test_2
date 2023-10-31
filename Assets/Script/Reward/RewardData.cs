@@ -15,19 +15,19 @@ public class RewardData
     {
         this.rewardCfg = rewardCfg;
         rewardStatus = DataStatus.NotFinish;
-        onStatusChange.Invoke(this);
+        onStatusChange?.Invoke(this);
     }
 
     public void Reset()
     {
         rewardStatus = DataStatus.NotFinish;
-        onStatusChange.Invoke(this);
+        onStatusChange?.Invoke(this);
     }
     public void Draw()
     {
         //抽奖的奖励是立即发放的 不存在没有领取
         rewardStatus = DataStatus.Get;
-        onStatusChange.Invoke(this);
+        onStatusChange?.Invoke(this);
     }
 
 }

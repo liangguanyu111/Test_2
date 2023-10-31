@@ -20,7 +20,7 @@ public class RewardStageData
     //检测阶段奖励是否满足条件
     public void CheckStage(int drawTimeMonth)
     {
-        if(drawTimeMonth > rewardStageCfg.reward_stageNum)
+        if(drawTimeMonth >= rewardStageCfg.reward_stageNum)
         {
             rewardStageStatus = DataStatus.Finished;
             onStageStatusChange.Invoke(this);

@@ -1,1 +1,1 @@
-[{"aviliableDrawTime":1,"dailyDrawTime":2,"drawTimeMonth":9,"joinTimeMonth":15}]
+[{"aviliableDrawTime":1,"dailyDrawTime":0,"drawTimeMonth":5,"joinTimeMonth":3}]

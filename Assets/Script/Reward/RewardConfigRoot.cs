@@ -20,8 +20,8 @@ public class RewardConfigRoot
         List<RewardData> rewardDataList = new List<RewardData>();
         if (JsaonMgr.LoadFromPath<RewardData>("/RewardData.txt", out rewardDataList))
         {
-            Debug.Log("¶ÁÈ¡RewardDataÊı¾İ");
-            //ÓĞ´æ´¢Êı¾İ
+            Debug.Log("è¯»å–RewardDataæ•°æ®");
+            //æœ‰å­˜å‚¨æ•°æ®
             foreach (var rewardData in rewardDataList)
             {
                 rewardDataDic.Add(rewardData.RewardCfg.reward_id, rewardData);
@@ -29,7 +29,7 @@ public class RewardConfigRoot
         }
         else
         {
-            //ÓÃÅäÖÃ³õÊ¼»¯
+            //ç”¨é…ç½®åˆå§‹åŒ–
             foreach (var rewardConfig in rewardConfigsDic)
             {
                 rewardDataDic.Add(rewardConfig.Value.reward_id, new RewardData(rewardConfig.Value));
@@ -44,8 +44,8 @@ public class RewardConfigRoot
         List<RewardStageData> rewardStageDataList = new List<RewardStageData>();
         if (JsaonMgr.LoadFromPath<RewardStageData>("/RewardStageData.txt", out rewardStageDataList))
         {
-            Debug.Log("¶ÁÈ¡RewardStageDataÊı¾İ");
-            //ÓĞ´æ´¢Êı¾İ
+            Debug.Log("è¯»å–RewardStageDataæ•°æ®");
+            //æœ‰å­˜å‚¨æ•°æ®
             foreach (var rewardStageData in rewardStageDataList)
             {
                 rewardStageDataDic.Add(rewardStageData.rewardStageCfg.reward_stageID, rewardStageData);
@@ -53,7 +53,7 @@ public class RewardConfigRoot
         }
         else
         {
-            //ÓÃÅäÖÃ³õÊ¼»¯
+            //ç”¨é…ç½®åˆå§‹åŒ–
             foreach (var rewardStageConfig in rewardStageConfigDic)
             {
                 rewardStageDataDic.Add(rewardStageConfig.Value.reward_stageID, new RewardStageData(rewardStageConfig.Value));
@@ -73,7 +73,7 @@ public class RewardConfigRoot
         }
     }
 
-    //¶ÁÈ¡½±ÀøÅäÖÃ
+    //è¯»å–å¥–åŠ±é…ç½®
     public void LoadRewardCfg()
     {
         List<RewardConfig> rewardCfgs = new List<RewardConfig>();

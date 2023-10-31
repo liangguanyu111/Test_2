@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Security.Cryptography;
 
-//ÓÃÀ´¹ÜÀíÈÕÆÚË¢ĞÂ£¬°üÀ¨Ã¿ÈÕË¢ĞÂÊÂ¼ş£¬Ã¿ÔÂË¢ĞÂÊÂ¼ş£¬ÀÛ¼ÆµÇÂ¼ÊÂ¼ş
-//È·ÇĞµÄÊ±¼äĞèÒª´Ó·şÎñÆ÷ÇëÇó£¬ÕâÀïÓÃ±¾µØÈÕÆÚÄ£Äâ
+//ç”¨æ¥ç®¡ç†æ—¥æœŸåˆ·æ–°ï¼ŒåŒ…æ‹¬æ¯æ—¥åˆ·æ–°äº‹ä»¶ï¼Œæ¯æœˆåˆ·æ–°äº‹ä»¶ï¼Œç´¯è®¡ç™»å½•äº‹ä»¶
+//ç¡®åˆ‡çš„æ—¶é—´éœ€è¦ä»æœåŠ¡å™¨è¯·æ±‚ï¼Œè¿™é‡Œç”¨æœ¬åœ°æ—¥æœŸæ¨¡æ‹Ÿ
 public class myDate
 {
     public int year;
@@ -25,9 +26,9 @@ public class TimeMgr : MonoBehaviour
 {
     public static TimeMgr _instance;
 
-    public event Action onDayRefersh;   //Ã¿ÈÕË¢ĞÂÊÂ¼ş
-    public event Action onMonthRefersh;  //Ã¿ÔÂË¢ĞÂÊÂ¼ş
-    public event Action onYearRefersh;   //Ã¿ÄêË¢ĞÂÊÂ¼ş
+    public event Action onDayRefersh;   //æ¯æ—¥åˆ·æ–°äº‹ä»¶
+    public event Action onMonthRefersh;  //æ¯æœˆåˆ·æ–°äº‹ä»¶
+    public event Action onYearRefersh;   //æ¯å¹´åˆ·æ–°äº‹ä»¶
 
     private myDate lastLogTime;
     private myDate nowTime;
@@ -41,23 +42,25 @@ public class TimeMgr : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-    }
 
-    private void Start()
-    {
         List<myDate> timeList = new List<myDate>();
-        if(JsaonMgr.LoadFromPath<myDate>("/time.txt",out timeList))
+        if (JsaonMgr.LoadFromPath<myDate>("/time.txt", out timeList))
         {
             lastLogTime = timeList[0];
         }
         else
         {
             lastLogTime = new myDate();
-            //µÚÒ»´ÎµÇÂ¼
+            //ç¬¬ä¸€æ¬¡ç™»å½•
         }
+        onDayRefersh += DayRefersh;
+        onMonthRefersh += DayRefersh;
+    }
 
+    private void Start()
+    {
         nowTime = new myDate(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,DateTime.Now.Minute);
-        //ºÍÉÏÒ»´ÎµÇÂ¼×÷±È½Ï
+        //å’Œä¸Šä¸€æ¬¡ç™»å½•ä½œæ¯”è¾ƒ
         CheckTime(lastLogTime.year,lastLogTime.month,lastLogTime.day,lastLogTime.min);
         StartCoroutine(Check());
     }
@@ -85,7 +88,7 @@ public class TimeMgr : MonoBehaviour
         }
         else if(min!=DateTime.Now.Minute)
         {
-            Debug.Log("ÓÖÊÇÏÂÒ»·ÖÖÓ");
+            Debug.Log("åˆæ˜¯ä¸‹ä¸€åˆ†é’Ÿ");
         }
         nowTime.year = DateTime.Now.Year;
         nowTime.month = DateTime.Now.Month;
@@ -97,13 +100,38 @@ public class TimeMgr : MonoBehaviour
     {
         CheckTime(nowTime.year, nowTime.month, nowTime.day,nowTime.min);
     }
-    //±£´æÍË³öµÄÊ±¼ä
+
+    //æ›´æ–°ä¸Šæ¬¡ç™»å½•æ—¶é—´
+    public void DayRefersh()
+    {
+        lastLogTime.year = DateTime.Now.Year;
+        lastLogTime.month = DateTime.Now.Month;
+        lastLogTime.day = DateTime.Now.Day;
+        lastLogTime.min = DateTime.Now.Minute;
+    }
+
+    public void DayRefershButton()
+    {
+        onDayRefersh?.Invoke();
+    }
+    public void MonthRefershButton()
+    {
+        onDayRefersh?.Invoke(); 
+        onMonthRefersh?.Invoke();
+    }
+
+    //ä¿å­˜é€€å‡ºçš„æ—¶é—´
     public void Save()
     {
         StopCoroutine(Check());
         JsaonMgr.WriteToPath<myDate>("/time.txt",new List<myDate>(){ new myDate(DateTime.Now.Year,DateTime.Now.Month,DateTime.Now.Day,DateTime.Now.Minute) });
     }
 
+
+    public myDate returnLastLogTime()
+    {
+        return lastLogTime;
+    }
     IEnumerator Check()
     {
         while(true)

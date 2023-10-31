@@ -26,16 +26,22 @@ public class SignInData
         this.signInCfg = signInCfg;
         signStatus = SignDataStatus.NotSign;
     }
+
+    public bool CanSign()
+    {
+        return signStatus == SignDataStatus.CanSign || signStatus == SignDataStatus.CanResign;
+    }
+
     public void CheckSignStatus(int signTimeMonth)
     {
         //累计登录日期和签到日期相同表示可以签到，超过签到日期表示可以补签
         if(signStatus== SignDataStatus.NotSign)
         {
-            if (signTimeMonth == signInCfg.signDay)
+            if (signTimeMonth == signInCfg.signDay-1)
             {
                 signStatus = SignDataStatus.CanSign;
             }
-            else if(signTimeMonth > signInCfg.signDay)
+            else if(signTimeMonth > signInCfg.signDay-1)
             {
                 signStatus = SignDataStatus.CanResign;
             }
@@ -50,10 +56,20 @@ public class SignInData
     }
     //签到
 
-    public void Sign(Action<SignDataStatus> callback)
+    public void Sign()
     {
-        signStatus = SignDataStatus.Signed;
-        OnSignStatusChange.Invoke(this);
-        callback(signStatus);     
+        if(CanSign())
+        {
+            if (signStatus== SignDataStatus.CanSign)
+            {
+                Debug.Log("签到!");
+            }
+            else if(signStatus == SignDataStatus.CanResign)
+            {
+                Debug.Log("补签!");
+            }
+            signStatus = SignDataStatus.Signed;
+            OnSignStatusChange.Invoke(this);
+        }  
     }
 }

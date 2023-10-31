@@ -51,7 +51,10 @@ public class RewardDataRoot
                 onDraw += rewardStageData.Value.CheckStage;
                 rewardStageData.Value.onStageStatusChange += OnRewardStageStatusChange; 
             }
+
+            UIMgr._instance.CreateRewardStateUI(rewardStageData.Value);
         }
+        UIMgr._instance.InitRewardList(rewardDataDic);
         onDraw?.Invoke(m_DrawData.drawTimeMonth);
     }
     
@@ -70,10 +73,10 @@ public class RewardDataRoot
     }
 
     //用来显示抽取进度  抽取次数/可抽取次数/状态
-    public void Draw(Action<int,int,bool> CallBack)
+    public void Draw()
     {
         RewardData randomGet;
-        if (CheckDrawCondition(CallBack,out randomGet))
+        if (CheckDrawCondition(out randomGet))
         {
             randomGet.Draw();
             onDraw?.Invoke(m_DrawData.drawTimeMonth);//检查阶段奖励
@@ -82,19 +85,21 @@ public class RewardDataRoot
             SaveRewardData();
         }
     }
-    public bool CheckDrawCondition(Action<int,int,bool> CallBack,out RewardData randomReward)
+    public bool CheckDrawCondition(out RewardData randomReward)
     {
         randomReward = null;
         //抽取次数到上限了，无法抽取
         if (m_DrawData.dailyDrawTime >= 10||m_DrawData.joinTimeMonth >= 10)
         {
-            CallBack(m_DrawData.aviliableDrawTime, m_DrawData.dailyDrawTime,false);
+            Debug.Log("抽取已达上限!");
+           // CallBack(m_DrawData.aviliableDrawTime, m_DrawData.dailyDrawTime,false);
             return false;
         }
         else if(m_DrawData.aviliableDrawTime <= 0 && m_DrawData.dailyDrawTime < 10)
         {
+            Debug.Log("可抽取次数不足!");
             //还可以看广告增加次数
-            CallBack(m_DrawData.aviliableDrawTime, m_DrawData.dailyDrawTime, true);
+            //CallBack(m_DrawData.aviliableDrawTime, m_DrawData.dailyDrawTime, true);
             return false;
         }
 
@@ -109,7 +114,7 @@ public class RewardDataRoot
         //全部抽取了也无法抽取了
         if(rewardNotGetList.Count<=0)
         {
-            CallBack(m_DrawData.aviliableDrawTime, m_DrawData.dailyDrawTime, false);
+           //CallBack(m_DrawData.aviliableDrawTime, m_DrawData.dailyDrawTime, false);
             return false;
         }
 
@@ -145,6 +150,7 @@ public class RewardDataRoot
     //广告增加抽奖次数
     public void AddDrawTime(int drawTimes)
     {
+        Debug.Log("增加抽取次数+"+drawTimes);
         m_DrawData.aviliableDrawTime += drawTimes;
     }
     //新的一天抽奖次数为1
@@ -167,6 +173,7 @@ public class RewardDataRoot
     private void RefershDrawMonthily()
     {
         m_DrawData.drawTimeMonth = 0;
+        m_DrawData.joinTimeMonth = 0;
 
         //刷新每月阶段奖励状态
         foreach (var rewardStageData in rewardStageDataDic)
@@ -179,6 +186,9 @@ public class RewardDataRoot
             rewardStageData.Value.onStageStatusChange += OnRewardStageStatusChange;
             onDraw += rewardStageData.Value.CheckStage;
         }
+
+        SaveDrawData();
+        SaveRewardStageData();
     }
 
     public void SaveDrawData()

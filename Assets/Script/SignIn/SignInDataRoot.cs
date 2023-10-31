@@ -19,7 +19,6 @@ public class SignInDataRoot
     public Dictionary<int, SignInData> signInDataDic = new Dictionary<int, SignInData>();
 
     public event Action<int> CheckSignStatus;
-    bool canSign = false; //每天只能签到一次
 
     public SignData m_signData;
     public SignInDataRoot()
@@ -33,11 +32,12 @@ public class SignInDataRoot
     public void Init()
     {
         signInDataDic = signInConfigRoot.GetSignInDataDic();
-        canSign = true;
         foreach (var signInData in signInDataDic)
         {
             CheckSignStatus += signInData.Value.CheckSignStatus;
             signInData.Value.OnSignStatusChange += OnSignStatusChange;
+
+            UIMgr._instance.CreateSignInUI(signInData.Value);
         }
 
         List<SignData> signData = new List<SignData>();
@@ -50,18 +50,8 @@ public class SignInDataRoot
             m_signData = new SignData();
         }
 
-        CheckSignStatus?.Invoke(m_signData.signTimeMonth);
-    }
-
-    public void Sign(int SignID,Action<SignDataStatus> callback)
-    {
-        if(canSign)
-        {
-            m_signData.signTimeMonth++;
-            signInDataDic[SignID].Sign(callback);
-            CheckSignStatus -= signInDataDic[SignID].CheckSignStatus;
-        }
-
+        //根据日期决定签到状态
+        CheckSignStatus?.Invoke(TimeMgr._instance.returnLastLogTime().day);
     }
 
     public void OnSignStatusChange(SignInData signData)
@@ -72,15 +62,16 @@ public class SignInDataRoot
         }
         else if(signData.signStatus == SignDataStatus.Signed)
         {
+            m_signData.signTimeMonth++;
             signData.OnSignStatusChange -= OnSignStatusChange;
         }
+        SaveSignTimeData();
         //UI逻辑修改
         SaveSignInData();
     }
     private void onDayRefersh()
     {
-        CheckSignStatus?.Invoke(m_signData.signTimeMonth);
-        canSign = true;
+        CheckSignStatus?.Invoke(TimeMgr._instance.returnLastLogTime().day);
         SaveSignTimeData();
     }
     private void onMonthRefersh()
@@ -98,7 +89,7 @@ public class SignInDataRoot
             signInData.Value.OnSignStatusChange += OnSignStatusChange;
         }
         //每月刷新之后需要重新监听
-
+        CheckSignStatus?.Invoke(TimeMgr._instance.returnLastLogTime().day);
         SaveSignInData();
         SaveSignTimeData();
     }
