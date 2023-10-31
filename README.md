@@ -1,6 +1,11 @@
 # Test_2
 第二次笔试
 
+第二次补充修改：
+1.签到和抽奖的演示
+2.修改了可签到/补签的逻辑判断，只需要在初始化或者刷新的时候根据上次登录日期来决定即可。在签到时根据状态决定时补签还是正常签到
+3.修复了一些刷新逻辑不合理。
+
 ![image](https://github.com/liangguanyu111/Test_2/blob/master/ff5f4c9e54539a4c084ab5c70cdeca0.png)
 第二次修改:
 1.简单的任务系统UI演示，UI显示通过回调和OnStatusChange配合
